@@ -89,6 +89,8 @@ namespace AHPU
             #region Updater
             if (File.Exists("Azure/" + actionOldScript.Release + ".incoming"))
             {
+                Directory.CreateDirectory("Azure/Updated/");
+
                 LibraryParser.Register("Azure/" + actionOldScript.Release + ".incoming",
                     "Azure/Updated/" + actionNewScript.Release + ".incoming", Comparer.IncomingIds, actionNewScript.Release);
 
@@ -97,6 +99,8 @@ namespace AHPU
             }
             if (File.Exists("Azure/" + actionOldScript.Release + ".outgoing"))
             {
+                Directory.CreateDirectory("Azure/Updated/");
+
                 LibraryParser.Register("Azure/" + actionOldScript.Release + ".outgoing",
                     "Azure/Updated/" + actionNewScript.Release + ".outgoing", Comparer.OutgoingIds, actionNewScript.Release);
                 Console.WriteLine("Updated: Azure/" + actionOldScript.Release + ".outgoing to Azure/Updated/" +
@@ -104,6 +108,8 @@ namespace AHPU
             }
             if (File.Exists("Uber/Events.cs"))
             {
+                Directory.CreateDirectory("Uber/Updated/");
+
                 LibraryParser.Register("Uber/Events.cs",
                     "Uber/Updated/Events.cs", Comparer.IncomingIds, actionNewScript.Release);
 
@@ -111,6 +117,8 @@ namespace AHPU
             }
             if (File.Exists("Uber/Composers.cs"))
             {
+                Directory.CreateDirectory("Uber/Updated/");
+
                 LibraryParser.Register("Uber/Composers.cs",
                     "Uber/Updated/Composers.cs", Comparer.OutgoingIds, actionNewScript.Release);
                 Console.WriteLine("Updated: Uber/Composers.cs to Uber/Updated/Composers.cs");
