@@ -316,7 +316,7 @@ namespace AHPU.Habbo
             foreach (var splitStr in split1)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
                 var function = GetFunctionByPosition(splitStr);
@@ -327,7 +327,7 @@ namespace AHPU.Habbo
             foreach (var splitStr in split2)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
                 var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
@@ -356,14 +356,14 @@ namespace AHPU.Habbo
             foreach (var splitStr in split3)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
             }
 
             foreach (var splitStr in split4)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
                 var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
@@ -390,7 +390,7 @@ namespace AHPU.Habbo
             foreach (var splitStr in split5)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
                 var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
@@ -417,7 +417,7 @@ namespace AHPU.Habbo
             foreach (var splitStr in split6)
             {
                 var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) && !packet.Classes.Contains(className) &&
+                if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
                 var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
