@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using AHPU.Framework;
@@ -94,7 +95,9 @@ namespace AHPU.Habbo
             {
                 var count = end - start;
                 at = str.IndexOf(h, start, count, StringComparison.Ordinal);
+
                 if (at == -1) break;
+
                 positions.Add(at);
                 start = at + 1;
             }
@@ -148,6 +151,16 @@ namespace AHPU.Habbo
             var classLine = _bufferStr.Substring(startP, endP - startP);
 
             return classLine.Split(new[] { " class " }, StringSplitOptions.None)[1].Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None)[0];
+        }
+
+        private int GetFunctionOrderOfClass(int pos, string functionName)
+        {
+            return
+                GetClassByPosition(pos).Split(new[] {" function "}, StringSplitOptions.None)
+                    .Skip(1)
+                    .Select(functionJunkStr => functionJunkStr.Split(' ', '(')[0])
+                    .TakeWhile(fN => fN != functionName)
+                    .Count();
         }
 
         private void ParseVoid(Packet packet, string function)
@@ -211,7 +224,7 @@ namespace AHPU.Habbo
                     if (line.Contains("super("))
                     {
                         if (line.Contains(","))
-                            ParseClassMesage(packet, line);
+                            ParseClassMesage(packet, line.Split(',')[1].Replace(");", string.Empty).Replace(" ", string.Empty));
 
                         var superStr = RemoveSafeStr(line.Replace(" ", string.Empty));
                         if (superStr != "super(k,);" && !packet.Supers.Contains(superStr))
@@ -239,14 +252,12 @@ namespace AHPU.Habbo
                 if (call.Contains("_SafeStr_") || call.Contains(Environment.NewLine))
                     continue;
 
-                if(!packet.Calls.Contains(call))
-                    packet.Calls.Add(call);
+                packet.Calls.Add(call);
             }
         }
 
-        private void ParseClassMesage(Packet packet, string line)
+        private void ParseClassMesage(Packet packet, string className)
         {
-            var className = line.Split(',')[1].Replace(");", string.Empty).Replace(" ", string.Empty);
             var classPosition = GetPositions("class " + className + " implements", _bufferStr);
 
             if (!classPosition.Any()) return;
@@ -309,7 +320,6 @@ namespace AHPU.Habbo
             var split3 = GetPositions(packet.DelegateFunction + ';', _bufferStr);
             var split4 = GetPositions("(k as " + packet.DelegateFunction + ')', _bufferStr);
             var split6 = GetPositions("(event as " + packet.DelegateFunction + ')', _bufferStr);
-            var split5 = GetPositions(packet.DelegateFunction + '(', _bufferStr);
 
             packet.References = split1.Count + split3.Count - 1;
 
@@ -323,14 +333,13 @@ namespace AHPU.Habbo
                 ParseVoid(packet, function);
             }
 
-
-            foreach (var splitStr in split2)
+            foreach (var functionPos in split2)
             {
-                var className = GetClassNameByPosition(splitStr);
+                var className = GetClassNameByPosition(functionPos);
                 if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
-                var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
+                var function = GetNearTopFunctionByPosition(functionPos, _bufferStr);
                 if (!string.IsNullOrEmpty(function))
                 {
                     var nearPacket = new Packet("NEARPACKET");
@@ -338,7 +347,7 @@ namespace AHPU.Habbo
 
                     packet.NearTopPacket.Add(nearPacket);
                 }
-                function = GetNearBottomFunctionByPosition(splitStr, _bufferStr);
+                function = GetNearBottomFunctionByPosition(functionPos, _bufferStr);
                 if (!string.IsNullOrEmpty(function))
                 {
                     var nearPacket = new Packet("NEARPACKET");
@@ -347,10 +356,14 @@ namespace AHPU.Habbo
                     packet.NearBottomPacket.Add(nearPacket);
                 }
 
-                function = GetFunctionByPosition(splitStr);
+                function = GetFunctionByPosition(functionPos);
+                ParseVoid(packet, function);
+
                 var inside = RemoveSafeStr(function).Replace(" function ", string.Empty);
-                if (!string.IsNullOrWhiteSpace(inside) && !packet.Open.Contains(inside) && !inside.StartsWith("//"))
+                if (!string.IsNullOrWhiteSpace(inside) && !inside.StartsWith("//"))
                     packet.Open.Add(inside);
+
+                packet.FunctionsOrders.Add(GetFunctionOrderOfClass(functionPos, packet.DelegateFunction));
             }
 
             foreach (var splitStr in split3)
@@ -360,13 +373,13 @@ namespace AHPU.Habbo
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
             }
 
-            foreach (var splitStr in split4)
+            foreach (var functionPos in split4)
             {
-                var className = GetClassNameByPosition(splitStr);
+                var className = GetClassNameByPosition(functionPos);
                 if (!string.IsNullOrWhiteSpace(className) &&
                     !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
 
-                var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
+                var function = GetNearTopFunctionByPosition(functionPos, _bufferStr);
                 if (!string.IsNullOrEmpty(function))
                 {
                     var nearPacket = new Packet("NEARPACKET");
@@ -374,7 +387,7 @@ namespace AHPU.Habbo
 
                     packet.NearTopPacket.Add(nearPacket);
                 }
-                function = GetNearBottomFunctionByPosition(splitStr, _bufferStr);
+                function = GetNearBottomFunctionByPosition(functionPos, _bufferStr);
                 if (!string.IsNullOrEmpty(function))
                 {
                     var nearPacket = new Packet("NEARPACKET");
@@ -383,34 +396,7 @@ namespace AHPU.Habbo
                     packet.NearBottomPacket.Add(nearPacket);
                 }
 
-                function = GetFunctionByPosition(splitStr);
-                ParseVoid(packet, function);
-            }
-
-            foreach (var splitStr in split5)
-            {
-                var className = GetClassNameByPosition(splitStr);
-                if (!string.IsNullOrWhiteSpace(className) &&
-                    !className.StartsWith("_SafeStr")) packet.Classes.Add(className);
-
-                var function = GetNearTopFunctionByPosition(splitStr, _bufferStr);
-                if (!string.IsNullOrEmpty(function))
-                {
-                    var nearPacket = new Packet("NEARPACKET");
-                    ParseVoid(nearPacket, function);
-
-                    packet.NearTopPacket.Add(nearPacket);
-                }
-                function = GetNearBottomFunctionByPosition(splitStr, _bufferStr);
-                if (!string.IsNullOrEmpty(function))
-                {
-                    var nearPacket = new Packet("NEARPACKET");
-                    ParseVoid(nearPacket, function);
-
-                    packet.NearBottomPacket.Add(nearPacket);
-                }
-
-                function = GetFunctionByPosition(splitStr);
+                function = GetFunctionByPosition(functionPos);
                 ParseVoid(packet, function);
             }
 
@@ -449,6 +435,7 @@ namespace AHPU.Habbo
             packet.Lines.Sort();
             packet.Strings.Sort();
             packet.Supers.Sort();
+            packet.FunctionsOrders.Sort();
 
             Console.WriteLine(packet.DelegateFunction + "   " + packet.References + "   " + string.Join(",", packet.Open));
             Console.WriteLine();

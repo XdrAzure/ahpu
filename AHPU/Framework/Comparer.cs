@@ -210,7 +210,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Lines.Any() && !newPacket.Lines.Any()) points += 3;
-            else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += oldPacket.Lines.Count * 5;
+            else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += oldPacket.Lines.Count * 6;
             else if (Math.Abs(oldPacket.Lines.Count - newPacket.Lines.Count) > 4) points -= 3;
             else
             {
@@ -247,6 +247,18 @@ namespace AHPU.Framework
                 points +=
                     oldPacket.FunctionsNames.Where(classStr => newPacket.FunctionsNames.Contains(classStr))
                         .Sum(classStr => 7);
+            }
+
+            if (!oldPacket.FunctionsOrders.Any() && !newPacket.FunctionsOrders.Any()) points += 3;
+            else if (string.Join(",", oldPacket.FunctionsOrders) == string.Join(",", newPacket.FunctionsOrders)) points += oldPacket.FunctionsOrders.Count * 5;
+            else if (Math.Abs(oldPacket.FunctionsOrders.Count - newPacket.FunctionsOrders.Count) > 4) points -= 3;
+            else
+            {
+                points +=
+                    oldPacket.FunctionsOrders.Distinct()
+                        .Where(
+                            str => oldPacket.FunctionsOrders.Count(s => s == str) == newPacket.FunctionsOrders.Count(s => s == str))
+                        .Sum(str => 4);
             }
 
             if (oldPacket.ConditionalCount == newPacket.ConditionalCount) points += 4;
