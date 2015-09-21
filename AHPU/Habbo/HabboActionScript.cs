@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using AHPU.Framework;
@@ -25,6 +26,17 @@ namespace AHPU.Habbo
         public HabboActionScript(string pathStr)
         {
             _bufferStr = File.ReadAllText(pathStr);
+
+            //Check is valid AS3 Sorcerer version
+            var as3WaterMarkStr = _bufferStr.Substring(0, 66);
+            if (!as3WaterMarkStr.Contains("AS3 Sorcerer"))
+                throw new FileLoadException("This file does not belong to AS3 Sorcerer", pathStr);
+            if (Convert.ToInt32(_bufferStr.Split('.')[0].Split(' ').Last()) < 3)
+                throw new VerificationException("The minimum version of AS3 Sorcerer is 3.0 or higher");
+
+            //Check is valid AS3 Sorcerer configuration
+            if (_bufferStr.IndexOf("    else") != -1 || _bufferStr.IndexOf(Environment.NewLine + "    {") == -1)
+                throw new Exception("Invalid AS3 Sorcerer configuration. Please, read the tutorial...");
 
             if(_bufferStr.IndexOf("RELEASE") != -1)
                 Release = "RELEASE" + _bufferStr.Split(new[] { "var k:String = \"RELEASE" }, StringSplitOptions.None)[1].Split('"')[0];
