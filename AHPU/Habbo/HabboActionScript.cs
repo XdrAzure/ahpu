@@ -191,9 +191,11 @@ namespace AHPU.Habbo
         private void ParseVoid(Packet packet, string function)
         {
             packet.ConditionalCount += GetPositions("if", function).Count;
+            packet.ConditionalNegativeCount += GetPositions("if (!", function).Count;
             packet.ConditionalElseCount += GetPositions("else", function).Count;
             packet.LocalCount += GetPositions("_local_", function).Count;
             packet.ArgCount += GetPositions("_arg_", function).Count;
+            packet.ThisCount += GetPositions("this.", function).Count;
             packet.EventsCount += GetPositions("events.dispatchEvent", function).Count;
             packet.ForCount += GetPositions("for (", function).Count;
             packet.ForeachCount += GetPositions("for each (", function).Count;
@@ -201,13 +203,13 @@ namespace AHPU.Habbo
             packet.SwitchCount += GetPositions("switch (", function).Count;
             packet.CaseCount += GetPositions("case ", function).Count;
             packet.DefaultCount += GetPositions("default:", function).Count;
-            packet.PointCount += GetPositions("new Point(", function).Count;
+            packet.PointCount += GetPositions("new Point(", function).Count + GetPositions(":Point", function).Count;
             packet.IndexOfCount += GetPositions(".indexOf(", function).Count;
             packet.GetValueCount += GetPositions(".getValue(", function).Count;
             packet.IntegersCount += GetPositions(":int ", function).Count;
             packet.StringsCount += GetPositions(":String ", function).Count;
             packet.BoolsCount += GetPositions(":Boolean ", function).Count;
-            packet.ArrayCount += GetPositions(":Array ", function).Count;
+            packet.ArrayCount += GetPositions("new Array( ", function).Count + GetPositions(":Array ", function).Count;
             packet.NewCount += GetPositions("new ", function).Count;
             packet.SendCount += GetPositions(".send(", function).Count;
             packet.ReturnNull += GetPositions("return;", function).Count;
@@ -220,6 +222,18 @@ namespace AHPU.Habbo
             packet.NotCount += GetPositions("!", function).Count;
             packet.BitAndCount += GetPositions(" & ", function).Count;
             packet.NullCount += GetPositions(" null", function).Count;
+            packet.Equal += GetPositions(" = ", function).Count;
+            packet.ComparatorEqual += GetPositions(" == ", function).Count;
+            packet.ComparatorNotEqual += GetPositions(" != ", function).Count;
+            packet.ComparatorLower += GetPositions(" < ", function).Count;
+            packet.ComparatorHigher += GetPositions(" > ", function).Count;
+            packet.ComparatorEqualOrLower += GetPositions(" <= ", function).Count;
+            packet.ComparatorEqualOrHigher += GetPositions(" >= ", function).Count;
+            packet.FalseCount += GetPositions(" = false", function).Count;
+            packet.TrueCount += GetPositions(" = true", function).Count;
+            packet.RestCount += GetPositions(" - ", function).Count;
+            packet.SumCount += GetPositions(" + ", function).Count;
+            packet.LengthCount += GetPositions(".length", function).Count;
 
             using (var reader = new StringReader(function))
             {
@@ -232,14 +246,12 @@ namespace AHPU.Habbo
                         var voidStr = line.Substring(line.IndexOf("(", StringComparison.Ordinal));
                         voidStr = voidStr.Substring(1, voidStr.IndexOf(")", StringComparison.Ordinal) - 1);
 
-
                         if (!string.IsNullOrWhiteSpace(voidStr) && voidStr != "k:Function")
                             packet.Builders.AddRange(voidStr.Split(',').ToList());
                     }
                     if (line.Contains("function "))
                     {
-                        var voidName = line.Substring(line.IndexOf("function ", StringComparison.Ordinal));
-                        voidName = voidName.Substring(9, voidName.IndexOf("(", StringComparison.Ordinal) - 9);
+                        var voidName = GetFunctionName(line);
 
                         if (!voidName.StartsWith("_Safe"))
                             packet.FunctionsNames.Add(voidName);

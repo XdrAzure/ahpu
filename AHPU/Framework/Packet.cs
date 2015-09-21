@@ -12,11 +12,13 @@ namespace AHPU.Framework
         public int References,
                    LocalCount,
                    ArgCount,
+                   ThisCount,
                    EventsCount,
                    ForCount,
                    ForeachCount,
                    WhileCount,
                    ConditionalCount,
+                   ConditionalNegativeCount,
                    ConditionalElseCount,
                    SwitchCount,
                    CaseCount,
@@ -39,7 +41,19 @@ namespace AHPU.Framework
                    OrCount,
                    AndCount,
                    NotCount,
-                   BitAndCount;
+                   BitAndCount,
+                   Equal,
+                   ComparatorEqual,
+                   ComparatorNotEqual,
+                   ComparatorHigher,
+                   ComparatorLower,
+                   ComparatorEqualOrHigher,
+                   ComparatorEqualOrLower,
+                   FalseCount,
+                   TrueCount,
+                   RestCount,
+                   SumCount,
+                   LengthCount;
 
         [XmlArray("Classes"), XmlArrayItem(typeof (string), ElementName = "Classes")] public List<string> Classes =
             new List<string>();

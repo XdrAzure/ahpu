@@ -170,7 +170,7 @@ namespace AHPU.Framework
             var points = 0;
 
             if (!oldPacket.Classes.Any() && !newPacket.Classes.Any()) points += 3;
-            else if (string.Join(",", oldPacket.Classes) == string.Join(",", newPacket.Classes)) points += oldPacket.Classes.Count * 7;
+            else if (string.Join(",", oldPacket.Classes) == string.Join(",", newPacket.Classes)) points += oldPacket.Classes.Distinct().Count() * 6;
             else
             {
                 points +=
@@ -179,7 +179,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Open.Any() && !newPacket.Open.Any()) points += 3;
-            else if (string.Join(",", oldPacket.Open) == string.Join(",", newPacket.Open)) points += oldPacket.Open.Count * 5;
+            else if (string.Join(",", oldPacket.Open) == string.Join(",", newPacket.Open)) points += oldPacket.Open.Distinct().Count() * 4;
             else if (Math.Abs(oldPacket.Open.Count - newPacket.Open.Count) > 4) points -= 3;
             else
             {
@@ -190,7 +190,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Strings.Any() && !newPacket.Strings.Any()) points += 5;
-            else if (string.Join(",", oldPacket.Strings) == string.Join(",", newPacket.Strings)) points += oldPacket.Strings.Count * 7;
+            else if (string.Join(",", oldPacket.Strings) == string.Join(",", newPacket.Strings)) points += oldPacket.Strings.Distinct().Count() * 6;
             else if (Math.Abs(oldPacket.Strings.Count - newPacket.Strings.Count) > 4) points -= 3;
             else
             {
@@ -203,7 +203,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Calls.Any() && !newPacket.Calls.Any()) points += 3;
-            else if (string.Join(",", oldPacket.Calls) == string.Join(",", newPacket.Calls)) points += oldPacket.Calls.Count * 5;
+            else if (string.Join(",", oldPacket.Calls) == string.Join(",", newPacket.Calls)) points += oldPacket.Calls.Distinct().Count() * 4;
             else if (Math.Abs(oldPacket.Calls.Count - newPacket.Calls.Count) > 4) points -= 3;
             else
             {
@@ -215,7 +215,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Lines.Any() && !newPacket.Lines.Any()) points += 4;
-            else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += oldPacket.Lines.Count * 7;
+            else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += oldPacket.Lines.Distinct().Count() * 6;
             else if (Math.Abs(oldPacket.Lines.Count - newPacket.Lines.Count) > 4) points -= 4;
             else
             {
@@ -227,7 +227,7 @@ namespace AHPU.Framework
             }
 
             if (!oldPacket.Supers.Any() && !newPacket.Supers.Any()) points += 3;
-            else if (string.Join(",", oldPacket.Supers) == string.Join(",", newPacket.Supers)) points += oldPacket.Supers.Count * 5;
+            else if (string.Join(",", oldPacket.Supers) == string.Join(",", newPacket.Supers)) points += oldPacket.Supers.Distinct().Count() * 4;
             else if (Math.Abs(oldPacket.Supers.Count - newPacket.Supers.Count) > 4) points -= 3;
             else
             {
@@ -254,7 +254,7 @@ namespace AHPU.Framework
                         .Sum(classStr => 7);
             }
 
-            if (string.Join(",", oldPacket.FunctionsOrders) == string.Join(",", newPacket.FunctionsOrders)) points += oldPacket.FunctionsOrders.Count * 6;
+            if (string.Join(",", oldPacket.FunctionsOrders) == string.Join(",", newPacket.FunctionsOrders)) points += oldPacket.FunctionsOrders.Distinct().Count() * 6;
             else if (Math.Abs(oldPacket.FunctionsOrders.Count - newPacket.FunctionsOrders.Count) > 4) points -= 4;
             else
             {
@@ -270,6 +270,12 @@ namespace AHPU.Framework
             else if (Math.Abs(oldPacket.ConditionalCount - newPacket.ConditionalCount) < 2) points += 2;
             else if (Math.Abs(oldPacket.ConditionalCount - newPacket.ConditionalCount) < 3) points += 1;
             else if (Math.Abs(oldPacket.ConditionalCount - newPacket.ConditionalCount) > 4) points -= 1;
+
+            if (oldPacket.ConditionalNegativeCount == newPacket.ConditionalNegativeCount) points += 4;
+            else if (oldPacket.ConditionalNegativeCount == 0 || newPacket.ConditionalNegativeCount == 0) points += 0;
+            else if (Math.Abs(oldPacket.ConditionalNegativeCount - newPacket.ConditionalNegativeCount) < 2) points += 2;
+            else if (Math.Abs(oldPacket.ConditionalNegativeCount - newPacket.ConditionalNegativeCount) < 3) points += 1;
+            else if (Math.Abs(oldPacket.ConditionalNegativeCount - newPacket.ConditionalNegativeCount) > 4) points -= 1;
 
             if (oldPacket.ConditionalElseCount == newPacket.ConditionalElseCount) points += 4;
             else if (oldPacket.ConditionalElseCount == 0 || newPacket.ConditionalElseCount == 0) points += 0;
@@ -316,20 +322,28 @@ namespace AHPU.Framework
             else points -= 3;
 
             if (oldPacket.LocalCount == newPacket.LocalCount) points += 4;
-            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 8) points -= 1;
-            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 12) points -= 3;
-            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 15) points -= 4;
+            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 3) points -= 1;
+            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 5) points -= 3;
+            else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) > 7) points -= 4;
             else if (oldPacket.LocalCount == 0 || newPacket.LocalCount == 0) points -= 1;
             else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) < 2) points += 2;
             else if (Math.Abs(oldPacket.LocalCount - newPacket.LocalCount) < 3) points += 1;
 
             if (oldPacket.ArgCount == newPacket.ArgCount) points += 4;
-            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 8) points -= 1;
-            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 13) points -= 3;
-            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 20) points -= 4;
+            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 3) points -= 1;
+            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 5) points -= 3;
+            else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) > 7) points -= 4;
             else if (oldPacket.ArgCount == 0 || newPacket.ArgCount == 0) points += 0;
             else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) < 2) points += 2;
             else if (Math.Abs(oldPacket.ArgCount - newPacket.ArgCount) < 3) points += 1;
+
+            if (oldPacket.ThisCount == newPacket.ThisCount) points += 4;
+            else if (Math.Abs(oldPacket.ThisCount - newPacket.ThisCount) > 3) points -= 1;
+            else if (Math.Abs(oldPacket.ThisCount - newPacket.ThisCount) > 5) points -= 3;
+            else if (Math.Abs(oldPacket.ThisCount - newPacket.ThisCount) > 7) points -= 4;
+            else if (oldPacket.ThisCount == 0 || newPacket.ThisCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ThisCount - newPacket.ThisCount) < 2) points += 2;
+            else if (Math.Abs(oldPacket.ThisCount - newPacket.ThisCount) < 3) points += 1;
 
             if (oldPacket.PointCount == newPacket.PointCount) points += 5;
             else if (Math.Abs(oldPacket.PointCount - newPacket.PointCount) < 4) points += 2;
@@ -447,6 +461,78 @@ namespace AHPU.Framework
             else if (Math.Abs(oldPacket.NullCount - newPacket.NullCount) < 2) points += 3;
             else if (Math.Abs(oldPacket.NullCount - newPacket.NullCount) < 3) points += 2;
             else if (Math.Abs(oldPacket.NullCount - newPacket.NullCount) > 4) points -= 1;
+
+            if (oldPacket.Equal == newPacket.Equal) points += 4;
+            else if (oldPacket.Equal == 0 || newPacket.Equal == 0) points -= 1;
+            else if (Math.Abs(oldPacket.Equal - newPacket.Equal) < 2) points += 3;
+            else if (Math.Abs(oldPacket.Equal - newPacket.Equal) < 3) points += 2;
+            else if (Math.Abs(oldPacket.Equal - newPacket.Equal) > 4) points -= 1;
+
+            if (oldPacket.ComparatorEqual == newPacket.ComparatorEqual) points += 4;
+            else if (oldPacket.ComparatorEqual == 0 || newPacket.ComparatorEqual == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorEqual - newPacket.ComparatorEqual) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorEqual - newPacket.ComparatorEqual) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorEqual - newPacket.ComparatorEqual) > 4) points -= 1;
+
+            if (oldPacket.ComparatorNotEqual == newPacket.ComparatorNotEqual) points += 4;
+            else if (oldPacket.ComparatorNotEqual == 0 || newPacket.ComparatorNotEqual == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorNotEqual - newPacket.ComparatorNotEqual) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorNotEqual - newPacket.ComparatorNotEqual) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorNotEqual - newPacket.ComparatorNotEqual) > 4) points -= 1;
+
+            if (oldPacket.ComparatorLower == newPacket.ComparatorLower) points += 4;
+            else if (oldPacket.ComparatorLower == 0 || newPacket.ComparatorLower == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorLower - newPacket.ComparatorLower) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorLower - newPacket.ComparatorLower) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorLower - newPacket.ComparatorLower) > 4) points -= 1;
+
+            if (oldPacket.ComparatorHigher == newPacket.ComparatorHigher) points += 4;
+            else if (oldPacket.ComparatorHigher == 0 || newPacket.ComparatorHigher == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorHigher - newPacket.ComparatorHigher) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorHigher - newPacket.ComparatorHigher) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorHigher - newPacket.ComparatorHigher) > 4) points -= 1;
+
+            if (oldPacket.ComparatorEqualOrLower == newPacket.ComparatorEqualOrLower) points += 4;
+            else if (oldPacket.ComparatorEqualOrLower == 0 || newPacket.ComparatorEqualOrLower == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrLower - newPacket.ComparatorEqualOrLower) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrLower - newPacket.ComparatorEqualOrLower) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrLower - newPacket.ComparatorEqualOrLower) > 4) points -= 1;
+
+            if (oldPacket.ComparatorEqualOrHigher == newPacket.ComparatorEqualOrHigher) points += 4;
+            else if (oldPacket.ComparatorEqualOrHigher == 0 || newPacket.ComparatorEqualOrHigher == 0) points -= 1;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrHigher - newPacket.ComparatorEqualOrHigher) < 2) points += 3;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrHigher - newPacket.ComparatorEqualOrHigher) < 3) points += 2;
+            else if (Math.Abs(oldPacket.ComparatorEqualOrHigher - newPacket.ComparatorEqualOrHigher) > 4) points -= 1;
+
+            if (oldPacket.FalseCount == newPacket.FalseCount) points += 4;
+            else if (oldPacket.FalseCount == 0 || newPacket.FalseCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.FalseCount - newPacket.FalseCount) < 2) points += 3;
+            else if (Math.Abs(oldPacket.FalseCount - newPacket.FalseCount) < 3) points += 2;
+            else if (Math.Abs(oldPacket.FalseCount - newPacket.FalseCount) > 4) points -= 1;
+
+            if (oldPacket.TrueCount == newPacket.TrueCount) points += 4;
+            else if (oldPacket.TrueCount == 0 || newPacket.TrueCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.TrueCount - newPacket.TrueCount) < 2) points += 3;
+            else if (Math.Abs(oldPacket.TrueCount - newPacket.TrueCount) < 3) points += 2;
+            else if (Math.Abs(oldPacket.TrueCount - newPacket.TrueCount) > 4) points -= 1;
+
+            if (oldPacket.RestCount == newPacket.RestCount) points += 4;
+            else if (oldPacket.RestCount == 0 || newPacket.RestCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.RestCount - newPacket.RestCount) < 2) points += 3;
+            else if (Math.Abs(oldPacket.RestCount - newPacket.RestCount) < 3) points += 2;
+            else if (Math.Abs(oldPacket.RestCount - newPacket.RestCount) > 4) points -= 1;
+
+            if (oldPacket.SumCount == newPacket.SumCount) points += 4;
+            else if (oldPacket.SumCount == 0 || newPacket.SumCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.SumCount - newPacket.SumCount) < 2) points += 3;
+            else if (Math.Abs(oldPacket.SumCount - newPacket.SumCount) < 3) points += 2;
+            else if (Math.Abs(oldPacket.SumCount - newPacket.SumCount) > 4) points -= 1;
+
+            if (oldPacket.LengthCount == newPacket.LengthCount) points += 4;
+            else if (oldPacket.LengthCount == 0 || newPacket.LengthCount == 0) points -= 1;
+            else if (Math.Abs(oldPacket.LengthCount - newPacket.LengthCount) < 2) points += 3;
+            else if (Math.Abs(oldPacket.LengthCount - newPacket.LengthCount) < 3) points += 2;
+            else if (Math.Abs(oldPacket.LengthCount - newPacket.LengthCount) > 4) points -= 1;
 
             if (nears)
             {
