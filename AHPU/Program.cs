@@ -63,28 +63,8 @@ namespace AHPU
                 }
             }
 
-            Console.WriteLine("Input int Variation (Recommended/default 0): ");
-            int diff;
-
-            Variation:
-            if (!int.TryParse(Console.ReadLine(), out diff))
-            {
-                Console.WriteLine("Invalid variation, please enter a valid integer.");
-                goto Variation;
-            }
-
-            Console.WriteLine("Input bool Near Comparator (Recommended/default true): ");
-            bool useNarComparer;
-
-            Comp:
-            if (!bool.TryParse(Console.ReadLine(), out useNarComparer))
-            {
-                Console.WriteLine("Invalid variation, please enter a bool.");
-                goto Comp;
-            }
-
             Console.WriteLine();
-            Comparer.Compare(actionOldScript, actionNewScript, diff, useNarComparer);
+            Comparer.Compare(actionOldScript, actionNewScript);
 
             #region Updater
             if (File.Exists("Azure/" + actionOldScript.Release + ".incoming"))
