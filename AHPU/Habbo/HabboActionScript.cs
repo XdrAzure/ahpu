@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using AHPU.Framework;
@@ -21,10 +20,8 @@ namespace AHPU.Habbo
         public SerializableDictionary<int, Packet> OutgoingPackets = new SerializableDictionary<int, Packet>();
         public SerializableDictionary<int, Packet> IncomingPackets = new SerializableDictionary<int, Packet>();
 
-        public HabboActionScript()
-        {
+        public HabboActionScript() {}
 
-        }
         public HabboActionScript(string pathStr)
         {
             _bufferStr = File.ReadAllText(pathStr);
@@ -72,7 +69,7 @@ namespace AHPU.Habbo
                 dic.Add(packetId, new Packet(delegateFunctionName));
 
                 if(delegateFunctionName.StartsWith("_Safe"))
-                    Task.Queue.Enqueue(new QueueData() { Habbo = this, Packet = dic[packetId] });
+                    Task.Queue.Enqueue(new QueueData { Habbo = this, Packet = dic[packetId] });
             }
         }
 
@@ -319,9 +316,9 @@ namespace AHPU.Habbo
             var split2 = GetPositions(packet.DelegateFunction + '(', _bufferStr);
             var split3 = GetPositions(packet.DelegateFunction + ';', _bufferStr);
             var split4 = GetPositions("(k as " + packet.DelegateFunction + ')', _bufferStr);
-            var split6 = GetPositions("(event as " + packet.DelegateFunction + ')', _bufferStr);
+            var split5 = GetPositions("(event as " + packet.DelegateFunction + ')', _bufferStr);
 
-            packet.References = split1.Count + split3.Count - 1;
+            packet.References = split1.Count + split2.Count + split3.Count + split4.Count + split5.Count - 1;
 
             foreach (var splitStr in split1)
             {
@@ -400,7 +397,7 @@ namespace AHPU.Habbo
                 ParseVoid(packet, function);
             }
 
-            foreach (var splitStr in split6)
+            foreach (var splitStr in split5)
             {
                 var className = GetClassNameByPosition(splitStr);
                 if (!string.IsNullOrWhiteSpace(className) &&
