@@ -68,8 +68,8 @@ namespace AHPU.Framework
         [XmlArray("FunctionsNames"), XmlArrayItem(typeof (string), ElementName = "FunctionsNames")] public List<string>
             FunctionsNames = new List<string>();
 
-        [XmlArray("FunctionsOrders"), XmlArrayItem(typeof (int), ElementName = "FunctionsOrders")] public
-            List<int> FunctionsOrders = new List<int>();
+        [XmlArray("FunctionsOrders"), XmlArrayItem(typeof (string), ElementName = "FunctionsOrders")] public
+            List<string> FunctionsOrders = new List<string>();
 
         [XmlArray("NearTopPacket"), XmlArrayItem(typeof (Packet), ElementName = "NearTopPacket")] public List<Packet>
             NearTopPacket = new List<Packet>();
