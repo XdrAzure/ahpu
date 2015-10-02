@@ -15,7 +15,7 @@ namespace AHPU
 
         private static void Main()
         {
-            Console.WriteLine("AHPU By Xdr ... ");
+            Console.WriteLine("AHPU By Xdr v1.1 ... ");
 
             var actionOldScript = new HabboActionScript("old.txt");
             if (!File.Exists("Cache/" + actionOldScript.Release + ".xml"))
@@ -131,8 +131,8 @@ namespace AHPU
                     found = true;
                 }
 
-                if(!found)
-                    Console.WriteLine("Id no encontrada!!!");
+                if (!found)
+                    Console.WriteLine("Id not found!!!");
                 Console.WriteLine();
             }
         }
