@@ -25,7 +25,7 @@ namespace AHPU.Framework
             {
                 try
                 {
-                    queueData.Habbo.DefinePacket(queueData.Packet);
+                    queueData.Habbo.DefinePacket(queueData.Packet, queueData.IsOutGoing);
                 }
                 catch (Exception e)
                 {
@@ -39,5 +39,6 @@ namespace AHPU.Framework
     {
         public Packet Packet;
         public HabboActionScript Habbo;
+        public bool IsOutGoing;
     }
 }
