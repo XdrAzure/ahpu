@@ -357,7 +357,7 @@ namespace AHPU.Habbo
             var split2 = GetPositions(packet.DelegateFunction + '(', _bufferStr);
             var split3 = GetPositions(packet.DelegateFunction + ';', _bufferStr);
 
-            packet.References = split1.Count + split3.Count - 1;
+            packet.References = split1.Count + split2.Count + split3.Count - 1;
 
             foreach (var splitStr in split1)
             {
@@ -415,6 +415,8 @@ namespace AHPU.Habbo
             {
                 var split4 = GetPositions("(k as " + packet.DelegateFunction + ')', _bufferStr);
                 var split5 = GetPositions("(event as " + packet.DelegateFunction + ')', _bufferStr);
+
+                packet.References += split4.Count + split5.Count;
 
                 foreach (var functionPos in split4)
                 {
