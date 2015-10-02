@@ -93,5 +93,18 @@ namespace AHPU.Framework
 
         public Packet() { }
         public Packet(string delegateFunction) { DelegateFunction = delegateFunction; }
+
+        public void Sort()
+        {
+            Classes.Sort();
+            Open.Sort();
+            Calls.Sort();
+            Readers.Sort();
+            Builders.Sort();
+            Lines.Sort();
+            Strings.Sort();
+            Supers.Sort();
+            FunctionsOrders.Sort();
+        }
     }
 }
