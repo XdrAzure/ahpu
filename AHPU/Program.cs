@@ -106,7 +106,8 @@ namespace AHPU
             #endregion
 
             Console.WriteLine();
-            Console.WriteLine("Waitings inputs of ids ...");
+            Console.WriteLine("Finished!!! ");
+            Console.WriteLine("Waitings inputs of packets ids ...");
 
             while (true)
             {
