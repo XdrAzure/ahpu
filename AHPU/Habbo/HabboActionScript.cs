@@ -31,7 +31,7 @@ namespace AHPU.Habbo
             var as3WaterMarkStr = _bufferStr.Substring(0, 66);
             if (!as3WaterMarkStr.Contains("AS3 Sorcerer"))
                 throw new FileLoadException("This file does not belong to AS3 Sorcerer", pathStr);
-            if (Convert.ToInt32(_bufferStr.Split('.')[0].Split(' ').Last()) < 3)
+            if (Convert.ToInt32(as3WaterMarkStr.Split('.')[0].Split(' ').Last()) < 3)
                 throw new VerificationException("The minimum version of AS3 Sorcerer is 3.0 or higher");
 
             //Check is valid AS3 Sorcerer configuration
