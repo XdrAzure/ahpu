@@ -260,8 +260,13 @@ namespace AHPU.Habbo
                         if (!voidName.StartsWith("_Safe"))
                             packet.FunctionsNames.Add(voidName);
                     }
-                    if (line.Contains(packet.DelegateFunction) && !line.Contains(".addHabboConnectionMessageEvent"))
-                        packet.Lines.Add(lineId + (char) 7 + RemoveSafeStr(line));
+                    if (line.Contains(packet.DelegateFunction))
+                    {
+                        if (line.Contains(".addHabboConnectionMessageEvent")) //line changes
+                            packet.Lines.Add(RemoveSafeStr(line));
+                        else
+                            packet.Lines.Add(lineId + (char)7 + RemoveSafeStr(line));
+                    }
 
                     if (line.Contains("super("))
                     {
