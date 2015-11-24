@@ -81,7 +81,7 @@ namespace AHPU.Habbo
                     : Convert.ToInt32(packetIdStr);
                 dic.Add(packetId, new Packet(delegateFunctionName));
 
-                if (delegateFunctionName.StartsWith("_Safe")) Task.Queue.Enqueue(new QueueData {Habbo = this, Packet = dic[packetId], IsOutGoing = isOutGoing});
+                if (delegateFunctionName.StartsWith("_Safe") || delegateFunctionName == "dynamic") Task.Queue.Enqueue(new QueueData {Habbo = this, Packet = dic[packetId], IsOutGoing = isOutGoing});
             }
         }
 

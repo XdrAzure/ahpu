@@ -5,7 +5,6 @@ using System.Threading;
 using System.Xml.Serialization;
 using AHPU.Framework;
 using AHPU.Habbo;
-using Azure.Messages.Parsers;
 
 namespace AHPU
 {

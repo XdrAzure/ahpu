@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Azure.Messages.Parsers
+namespace AHPU.Framework
 {
     /// <summary>
     /// Class LibraryParser.

@@ -18,7 +18,7 @@ namespace AHPU.Framework
         #region Main Comparer
 
         private static void InternalComparer(SerializableDictionary<int, Packet> olds,
-                                             SerializableDictionary<int, Packet> news, IDictionary<int, List<int>> to)
+                                             IReadOnlyDictionary<int, Packet> news, IDictionary<int, List<int>> to)
         {
             foreach (var oldPacketPair in olds)
             {
@@ -31,7 +31,9 @@ namespace AHPU.Framework
                     var cpoints = 0;
                     var newPacket = newPacketPair.Value;
 
-                    if (oldPacket.DelegateFunction == newPacket.DelegateFunction)
+                    if (oldPacket.DelegateFunction == "dynamic" || newPacket.DelegateFunction == "dynamic") //shit of obfuscator
+                    { }
+                    else if (oldPacket.DelegateFunction == newPacket.DelegateFunction)
                     {
                         if (!oldPacket.DelegateFunction.StartsWith("_Safe"))
                         {
