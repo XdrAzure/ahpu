@@ -15,7 +15,7 @@ namespace AHPU
 
         private static void Main()
         {
-            Console.WriteLine("AHPU By Xdr v1.1 ... ");
+            Console.WriteLine("AHPU By Xdr v1.2 ... ");
 
             var actionOldScript = new HabboActionScript("old.txt");
             if (!File.Exists("Cache/" + actionOldScript.Release + ".xml"))

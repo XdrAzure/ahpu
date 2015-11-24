@@ -101,31 +101,31 @@ namespace AHPU.Framework
         {
             var points = 0;
 
-            if (!oldPacket.Classes.Any() && !newPacket.Classes.Any()) points += 4;
+            if (!oldPacket.Classes.Any() && !newPacket.Classes.Any()) points += 3;
             else if (string.Join(",", oldPacket.Classes) == string.Join(",", newPacket.Classes)) points += 3;
 
-            if (!oldPacket.Open.Any() && !newPacket.Open.Any()) points += 4;
+            if (!oldPacket.Open.Any() && !newPacket.Open.Any()) points += 3;
             else if (string.Join(",", oldPacket.Open) == string.Join(",", newPacket.Open)) points += 3;
 
-            if (!oldPacket.Strings.Any() && !newPacket.Strings.Any()) points += 6;
+            if (!oldPacket.Strings.Any() && !newPacket.Strings.Any()) points += 5;
             else if (string.Join(",", oldPacket.Strings) == string.Join(",", newPacket.Strings)) points += 5;
 
-            if (!oldPacket.Calls.Any() && !newPacket.Calls.Any()) points += 4;
+            if (!oldPacket.Calls.Any() && !newPacket.Calls.Any()) points += 3;
             else if (string.Join(",", oldPacket.Calls) == string.Join(",", newPacket.Calls)) points += 3;
 
-            if (!oldPacket.Lines.Any() && !newPacket.Lines.Any()) points += 5;
+            if (!oldPacket.Lines.Any() && !newPacket.Lines.Any()) points += 4;
             else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += 4;
 
-            if (!oldPacket.Supers.Any() && !newPacket.Supers.Any()) points += 4;
+            if (!oldPacket.Supers.Any() && !newPacket.Supers.Any()) points += 3;
             else if (string.Join(",", oldPacket.Supers) == string.Join(",", newPacket.Supers)) points += 3;
 
-            if (!oldPacket.Builders.Any() && !newPacket.Builders.Any()) points += 6;
+            if (!oldPacket.Builders.Any() && !newPacket.Builders.Any()) points += 5;
             else points += string.Join(",", oldPacket.Builders) == string.Join(",", newPacket.Builders) ? 5 : 0;
 
-            if (!oldPacket.Readers.Any() && !newPacket.Readers.Any()) points += 6;
+            if (!oldPacket.Readers.Any() && !newPacket.Readers.Any()) points += 5;
             else points += string.Join(",", oldPacket.Readers) == string.Join(",", newPacket.Readers) ? 5 : 0;
 
-            if (!oldPacket.FunctionsNames.Any() && !newPacket.FunctionsNames.Any()) points += 8;
+            if (!oldPacket.FunctionsNames.Any() && !newPacket.FunctionsNames.Any()) points += 7;
             else if (string.Join(",", oldPacket.FunctionsNames) == string.Join(",", newPacket.FunctionsNames)) points += 7;
 
             if (string.Join(",", oldPacket.FunctionsOrders) == string.Join(",", newPacket.FunctionsOrders)) points += 6;
@@ -135,6 +135,8 @@ namespace AHPU.Framework
             if (oldPacket.ConditionalNegativeCount == newPacket.ConditionalNegativeCount) points += 4;
 
             if (oldPacket.ConditionalElseCount == newPacket.ConditionalElseCount) points += 4;
+
+            if (oldPacket.KCount == newPacket.KCount) points += 4;
 
             if (oldPacket.EventsCount == newPacket.EventsCount) points += 4;
 
@@ -149,7 +151,6 @@ namespace AHPU.Framework
             if (oldPacket.CaseCount == newPacket.CaseCount) points += 4;
 
             if (oldPacket.DefaultCount == newPacket.DefaultCount) points += 3;
-
 
             if (oldPacket.LocalCount == newPacket.LocalCount) points += 4;
 
@@ -220,6 +221,12 @@ namespace AHPU.Framework
             if (oldPacket.SumCount == newPacket.SumCount) points += 4;
 
             if (oldPacket.LengthCount == newPacket.LengthCount) points += 4;
+
+            if (oldPacket.AsCount == newPacket.RestCount) points += 4;
+
+            if (oldPacket.IsCount == newPacket.SumCount) points += 4;
+
+            if (oldPacket.InCount == newPacket.LengthCount) points += 4;
 
             return points;
         }

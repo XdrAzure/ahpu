@@ -14,6 +14,7 @@ namespace AHPU.Framework
                    ArgCount,
                    ThisCount,
                    EventsCount,
+                   KCount,
                    ForCount,
                    ForeachCount,
                    WhileCount,
@@ -53,7 +54,10 @@ namespace AHPU.Framework
                    TrueCount,
                    RestCount,
                    SumCount,
-                   LengthCount;
+                   LengthCount,
+                   AsCount,
+                   IsCount,
+                   InCount;
 
         [XmlArray("Classes"), XmlArrayItem(typeof (string), ElementName = "Classes")] public List<string> Classes =
             new List<string>();
