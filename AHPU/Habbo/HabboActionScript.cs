@@ -170,7 +170,7 @@ namespace AHPU.Habbo
             return classLine.Split(new[] { " class " }, StringSplitOptions.None)[1].Split(new[] { " ", Environment.NewLine }, StringSplitOptions.None)[0];
         }
 
-        private int[] GetFunctionOrderOfClass(int posClass, string match)
+        private IEnumerable<int> GetFunctionOrderOfClass(int posClass, string match)
         {
             var classStr = GetClassByPosition(posClass);
             var posArray = GetPositions(" function ", classStr);
