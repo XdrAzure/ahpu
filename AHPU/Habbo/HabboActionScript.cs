@@ -594,7 +594,7 @@ namespace AHPU.Habbo
         void ParseStructure(Packet packet, string structureStr, string classStr, int count = -1)
         {
             count++;
-            if (count > 5)
+            if (count > 5) // Anti stack overflow.
                 return;
 
             if (string.IsNullOrEmpty(classStr))
