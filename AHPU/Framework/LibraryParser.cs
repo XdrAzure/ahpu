@@ -51,7 +51,10 @@ namespace AHPU.Framework
                 }
 
                 File.AppendAllText(toPath, (punctuation ? " " : string.Empty) + string.Join(",", dic[packetId]));
-                File.AppendAllText(toPath, (punctuation ? "; // " + release : string.Empty) + Environment.NewLine);
+                if (Comparer.ChangedStructure.Contains(packetId))
+                    File.AppendAllText(toPath, (punctuation ? "; // changed structure - " + release : "// changed structure") + Environment.NewLine);
+                else
+                    File.AppendAllText(toPath, (punctuation ? "; // " + release : string.Empty) + Environment.NewLine);
             }
         }
     }

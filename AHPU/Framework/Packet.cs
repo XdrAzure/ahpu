@@ -7,6 +7,8 @@ namespace AHPU.Framework
     [Serializable]
     public class Packet
     {
+        [XmlIgnore]
+        public bool StructureChanged = false;
         public string DelegateFunction;
 
         public int References,
@@ -94,6 +96,10 @@ namespace AHPU.Framework
 
         [XmlArray("NearBottomPacket"), XmlArrayItem(typeof (Packet), ElementName = "NearBottomPacket")] public
             List<Packet> NearBottomPacket = new List<Packet>();
+
+        [XmlArray("Structure"), XmlArrayItem(typeof(string), ElementName = "Structure")]
+        public List<string>
+            Structure = new List<string>();
 
         public Packet() { }
         public Packet(string delegateFunction) { DelegateFunction = delegateFunction; }

@@ -14,7 +14,7 @@ namespace AHPU
 
         private static void Main()
         {
-            Console.WriteLine("AHPU By Xdr v1.2 ... ");
+            Console.WriteLine("AHPU By Xdr v1.3 ... ");
 
             var actionOldScript = new HabboActionScript("old.txt");
             if (!File.Exists("Cache/" + actionOldScript.Release + ".xml"))
@@ -106,7 +106,7 @@ namespace AHPU
 
             Console.WriteLine();
             Console.WriteLine("Finished!!! ");
-            Console.WriteLine("Waitings inputs of packets ids ...");
+            Console.WriteLine("Waiting inputs of packets ids ...");
 
             while (true)
             {

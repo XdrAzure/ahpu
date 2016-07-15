@@ -8,6 +8,7 @@ namespace AHPU.Framework
     {
         public static Dictionary<int, List<int>> OutgoingIds = new Dictionary<int, List<int>>();
         public static Dictionary<int, List<int>> IncomingIds = new Dictionary<int, List<int>>();
+        public static List<int> ChangedStructure = new List<int>();
 
         public static void Compare(HabboActionScript old, HabboActionScript news)
         {
@@ -92,6 +93,9 @@ namespace AHPU.Framework
                     }
                 }
 
+                if (packetIds.Count == 1 && string.Join(",", oldPacket.Structure) != string.Join(",", news[packetIds[0]].Structure))
+                    ChangedStructure.Add(oldPacketPair.Key);
+
                 to.Add(oldPacketPair.Key, packetIds);
             }
         }
@@ -103,34 +107,40 @@ namespace AHPU.Framework
         {
             var points = 0;
 
-            if (!oldPacket.Classes.Any() && !newPacket.Classes.Any()) points += 3;
+            if (oldPacket.Classes.Count == 0 && newPacket.Classes.Count == 0) points += 3;
             else if (string.Join(",", oldPacket.Classes) == string.Join(",", newPacket.Classes)) points += 3;
 
-            if (!oldPacket.Open.Any() && !newPacket.Open.Any()) points += 3;
+            if (oldPacket.Open.Count == 0 && newPacket.Open.Count == 0) points += 3;
             else if (string.Join(",", oldPacket.Open) == string.Join(",", newPacket.Open)) points += 3;
 
-            if (!oldPacket.Strings.Any() && !newPacket.Strings.Any()) points += 5;
+            if (oldPacket.Strings.Count == 0 && newPacket.Strings.Count == 0) points += 5;
             else if (string.Join(",", oldPacket.Strings) == string.Join(",", newPacket.Strings)) points += 5;
 
-            if (!oldPacket.Calls.Any() && !newPacket.Calls.Any()) points += 3;
+            if (oldPacket.Calls.Count == 0 && newPacket.Calls.Count == 0) points += 3;
             else if (string.Join(",", oldPacket.Calls) == string.Join(",", newPacket.Calls)) points += 3;
 
-            if (!oldPacket.Lines.Any() && !newPacket.Lines.Any()) points += 4;
+            if (oldPacket.Lines.Count == 0 && newPacket.Lines.Count == 0) points += 4;
             else if (string.Join(",", oldPacket.Lines) == string.Join(",", newPacket.Lines)) points += 4;
 
-            if (!oldPacket.Supers.Any() && !newPacket.Supers.Any()) points += 3;
+            if (oldPacket.Supers.Count == 0 && newPacket.Supers.Count == 0) points += 3;
             else if (string.Join(",", oldPacket.Supers) == string.Join(",", newPacket.Supers)) points += 3;
 
-            if (!oldPacket.Builders.Any() && !newPacket.Builders.Any()) points += 5;
+            if (oldPacket.Builders.Count == 0 && newPacket.Builders.Count == 0) points += 5;
             else points += string.Join(",", oldPacket.Builders) == string.Join(",", newPacket.Builders) ? 5 : 0;
 
-            if (!oldPacket.Readers.Any() && !newPacket.Readers.Any()) points += 5;
+            if (oldPacket.Readers.Count == 0 && newPacket.Readers.Count == 0) points += 5;
             else points += string.Join(",", oldPacket.Readers) == string.Join(",", newPacket.Readers) ? 5 : 0;
 
-            if (!oldPacket.FunctionsNames.Any() && !newPacket.FunctionsNames.Any()) points += 7;
+            if (oldPacket.FunctionsNames.Count == 0 && newPacket.FunctionsNames.Count == 0) points += 7;
             else if (string.Join(",", oldPacket.FunctionsNames) == string.Join(",", newPacket.FunctionsNames)) points += 7;
 
             if (string.Join(",", oldPacket.FunctionsOrders) == string.Join(",", newPacket.FunctionsOrders)) points += 6;
+
+            if (string.Join(",", oldPacket.Structure) == string.Join(",", newPacket.Structure)) points += 8;
+            else if (newPacket.Structure.Count - oldPacket.Structure.Count == 1) points += 6;
+            else if (newPacket.Structure.Count - oldPacket.Structure.Count == 2) points += 5;
+            else if (newPacket.Structure.Count - oldPacket.Structure.Count == 3) points += 4;
+            else if (newPacket.Structure.Count - oldPacket.Structure.Count == 4) points += 3;
 
             if (oldPacket.ConditionalCount == newPacket.ConditionalCount) points += 4;
 
